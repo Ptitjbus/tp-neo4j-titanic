@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  neo4j:
+    image: neo4j
+    environment:
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_AUTH=neo4j/student
+      - NEO4J_dbms_connector_http_advertised__address=0.0.0.0:7474
+    volumes:
+      - ./docker/plugins:/plugins
+      - ./docker/data:/data
+      - ./docker/import:/import
+    ports:
+      - 7474:7474
+      - 7687:7687
