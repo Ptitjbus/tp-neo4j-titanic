@@ -1,40 +1,49 @@
 # TP Neo4J
-A base code for [Neo4J](https://decima.notion.site/Exercice-Neo4J-b9642c1647d24f62b5c69e680ddd141b)
+Final code from [Mathis](https://github.com/Ptitjbus)
+
+Fork from [Decima](https://github.com/henri-corp/tp-neo4j-js-skeleton)
 
 ## Requirements
 - NodeJS
-- Docker with Docker-compose
 
 
 ## Getting started
 
 ### Installation
-make a copy of `.env.sample` and name it `.env`.
-This file is by default configured to run with the docker-compose or local installation.
+Make a copy of `.env.sample` and name it `.env`.
+Complete the .env with the right fields
 
 Then run `yarn` or `npm install` depending on your environment.
 
-### Start Neo4J with Docker
-
-Start Neo4J server using `docker-compose up -d`. Neo4J http port is `7474` and bolt is `7687`
+The database is normally all set but if not, run : 
+``` 
+npm run start createNodes
+```
+Wait until the process is done before runnig :
+```
+npm run start createRelations
+``` 
 
 
 ### Usage
 
-Every exercices should be stored in exercices folder.
+Every responses should be stored in exercices folder.
 To run them just run the following command : 
 
 ```
-npm run start ex0
+npm run start q1
 ```
 
 If you have `yarn` you can run
 ```
-yarn start ex0
+yarn start q1
 ```
-It will automatically use the file `./exercices/ex0.js`.
+It will automatically use the file `./exercices/q1.js`.
 
-In the Exercices folder, you can find a `ex0.js`, a sample for you to create new exercices.
+## Clear database
+To clear the database entierly just run
 
-All exercices can be found on [learn.henri.run](https://decima.notion.site/Exercice-Neo4J-b9642c1647d24f62b5c69e680ddd141b)
-
+```
+npm run start deleteAll
+```
+It will delete all the `nodes` and `relationships`

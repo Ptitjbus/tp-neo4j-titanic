@@ -13,6 +13,7 @@ module.exports = async function (session) {
 
     const jsonArray = await csv().fromFile("exercices/titanic_full.csv");
 
+    //definition of fields type 
     const uselessFields = [
         'Age_wiki',
         'Class',
@@ -33,36 +34,40 @@ module.exports = async function (session) {
     const boolFields = ['Survived']
     const nameFields = ['Name']
 
-    const HometownField = ['Hometown']
-    const DestinationField = ['Destination']
-
-    // let debut = performance.now()
+    //data sorting
     for (const item of jsonArray) {
         counterForId++
+            //uselessFields
             for (const field of uselessFields) {
                 delete (item[field])
             }
+            //null fields
             for (const field of Object.keys(item)) {
                 if (!item[field]) {
                     item[field] = null
                 }
             }
+            //float fields
             for (const field of floatFields) {
                 convertToFloat(item, field)
             }
+            //name fields to firstname/lastname
             for (const field of nameFields) {
                 convertToName(item, field)                
             }
+            //bool fields
             for (const field of boolFields) {
                 convertToBoolean(item, field)
             }
-            let idHometown = convertToHometownField(item, 'Hometown')
+            //set hometowns
+            convertToHometownField(item, 'Hometown')
+            //set destinations
             let idDestination = convertToDestinationField(item, 'Destination')
-
+            //set tickets
             setTicketTab(item,idDestination)
-            
-            
     }
+
+    //create relation between passengers and hometowns
     let dHometown = performance.now()
     for(const item of HometownTab){
             let result = await session.run(`MATCH
@@ -75,6 +80,7 @@ module.exports = async function (session) {
     let fHometown = performance.now()
     console.log(`✔ Hometown/Passenger relation succesfuly created in ${fHometown - dHometown} ms.`.black.bgGreen)
 
+    //create relation between tickets and destinations
     let dDestination = performance.now()
     for(const item of DestinationTab){
         let result = await session.run(`MATCH
@@ -87,6 +93,7 @@ module.exports = async function (session) {
     let fDestination = performance.now()
     console.log(`✔ Ticket/Destination relation succesfuly created in ${fDestination - dDestination} ms.`.black.bgGreen)
 
+    //create relation between passengers and tickets
     let dTicket = performance.now()
     for(const item of TicketsTab){
         let result = await session.run(`MATCH
@@ -98,10 +105,10 @@ module.exports = async function (session) {
     }
     let fTicket = performance.now()
     console.log(`✔ Passenger/Ticket relation succesfuly created in ${fTicket - dTicket} ms.`.black.bgGreen)
-    
-    
+        
 }
 
+//string to float
 function convertToFloat(item, field) {
     if (!item[field]) {
         item[field] = null
@@ -110,14 +117,19 @@ function convertToFloat(item, field) {
     item[field] = parseFloat(item[field]);
 }
 
+//string to boolean
 function convertToBoolean(item, field) {
     if (!item[field]) {
         item[field] = null
         return
     }
-    item[field] = (item[field] !== 'FALSE');
+    if(parseInt(item[field])== 1)
+        item[field] = true
+    else
+        item[field] = false
 }
 
+//string to firstname and lastname
 function convertToName(item, field){
     if (!item[field]) {
         item[field] = null
@@ -128,13 +140,14 @@ function convertToName(item, field){
     item[field] = ar
 }
 
+//string to hometown adress
 function convertToHometownField(item, field){
-    //
+
     let adressTab = adressParsing(item, field)  
     if (!adressTab) {
         return null
     }  
-    //test if hometown are differents and push them in an other array
+    //test if hometown are differents and push them in an HometownTab array
     idOfAdress = counterForId
     if(HometownTab.length > 0){
         let isCityAlreadyCreated = false
@@ -156,13 +169,14 @@ function convertToHometownField(item, field){
     return idOfAdress
 }
 
+//string to destination adress
 function convertToDestinationField(item, field){
-    //
+
     let adressTab = adressParsing(item, field)    
     if (!adressTab) {
         return null
     }  
-    //test if hometown are differents and push them in an other array
+    //test if hometown are differents and push them in an DestinationTab array
     idOfAdress = counterForId
     if(DestinationTab.length > 0){
         let isCityAlreadyCreated = false
@@ -184,6 +198,7 @@ function convertToDestinationField(item, field){
     return idOfAdress
 }
 
+//parse adress to convert in good format (id,city,state,county)
 function adressParsing(item,field){
     let adressTab = []
     if (!item[field]) {
@@ -227,6 +242,7 @@ function adressParsing(item,field){
     return adressTab
 }
 
+//check if ticket exist and if not push ticket in TicketsTab 
 function setTicketTab(item, idDestination){
     let ticketAr = []
     ticketAr[0] = item['Ticket']

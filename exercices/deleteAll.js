@@ -5,5 +5,5 @@
  */
 module.exports = async function (session) {
     const result = await session.run("MATCH (n) DETACH DELETE n")
-    console.log("Toutes les données ont été supprimés !".white.bgRed);
+    console.log("Toutes les données ont été supprimés".white.bgRed);
 }
