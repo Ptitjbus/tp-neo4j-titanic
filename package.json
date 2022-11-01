@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "colors": "^1.4.0",
+    "csv": "^6.2.1",
     "csvtojson": "^2.0.10",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
