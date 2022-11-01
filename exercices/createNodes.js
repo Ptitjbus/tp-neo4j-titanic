@@ -289,7 +289,6 @@ function adressParsing(item,field){
         }
     }
     item[field] = adressTab
-    console.log(adressTab)
     return adressTab
 }
 
