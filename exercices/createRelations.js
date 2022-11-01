@@ -69,6 +69,8 @@ module.exports = async function (session) {
 
     //create relation between passengers and hometowns
     let dHometown = performance.now()
+    
+    console.log(`Creation of Hometown/Passenger relations ...`.grey)
     for(const item of HometownTab){
             let result = await session.run(`MATCH
             (p:Passenger),
@@ -78,10 +80,11 @@ module.exports = async function (session) {
             RETURN type(r)`)
     }
     let fHometown = performance.now()
-    console.log(`✔ Hometown/Passenger relation succesfuly created in ${fHometown - dHometown} ms.`.black.bgGreen)
+    console.log(`✔ Hometown/Passenger relations succesfuly created in ${fHometown - dHometown} ms.`.black.bgGreen)
 
     //create relation between tickets and destinations
-    let dDestination = performance.now()
+    let dDestination = performance.now()    
+    console.log(`Creation of Ticket/Destination relations ...`.grey)
     for(const item of DestinationTab){
         let result = await session.run(`MATCH
             (t:Ticket),
@@ -91,10 +94,12 @@ module.exports = async function (session) {
             RETURN type(r)`)
     }
     let fDestination = performance.now()
-    console.log(`✔ Ticket/Destination relation succesfuly created in ${fDestination - dDestination} ms.`.black.bgGreen)
+    console.log(`✔ Ticket/Destination relations succesfuly created in ${fDestination - dDestination} ms.`.black.bgGreen)
 
     //create relation between passengers and tickets
     let dTicket = performance.now()
+    
+    console.log(`Creation of Passenger/Ticket relations ...`.grey)
     for(const item of TicketsTab){
         let result = await session.run(`MATCH
             (p:Passenger),
@@ -104,7 +109,7 @@ module.exports = async function (session) {
             RETURN type(r)`)
     }
     let fTicket = performance.now()
-    console.log(`✔ Passenger/Ticket relation succesfuly created in ${fTicket - dTicket} ms.`.black.bgGreen)
+    console.log(`✔ Passenger/Ticket relations succesfuly created in ${fTicket - dTicket} ms.`.black.bgGreen)
         
 }
 
